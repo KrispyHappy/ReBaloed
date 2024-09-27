@@ -8,14 +8,13 @@
 function SMODS.INIT.ReBaloed()
 local ReBaloed = SMODS.findModByID('ReBaloed')
 local card = self
-
 	SMODS.Joker:take_ownership('credit_card', {
 	loc_txt = {
         ["name"] = "Credit Card",
         ["text"] = {
-            [1] = "Go up to {C:red}-$15{} in debt.",
+            [1] = "Go up to {C:red}-$#1#{} in debt.",
             [2] = "When {C:attention}Boss Blind{} is defeated,",
-			[3] = "remove all debt."
+			[3] = "remove all debt"
         },
     },
 	config = {extra = 15},
@@ -35,11 +34,11 @@ local card = self
         ["name"] = "Loyalty Card",
         ["text"] = {
             [1] = "Every {C:attention}4{} hands this Joker",
-            [2] = "gives {X:mult,C:white}X#1#{} Mult and {C:money}$3{}.",
+            [2] = "gives {X:mult,C:white}X#1#{} Mult and {C:money}$3{}",
 			[3] = "{C:inactive}(#3#){}"
         },
     },
-	config = {extra = {Xmult = 4, every = 3, remaining = "3 remaining"}},
+	config = {extra = {Xmult = 3, every = 3, remaining = "3 remaining"}},
 	cost = 8,
 	calculate = function(self, card, context)
 		if context.before then
@@ -79,6 +78,40 @@ local card = self
 			end
 		end
     end
+	})
+	SMODS.Joker:take_ownership('8_ball', {
+	loc_txt = {
+        ["name"] = "8 Ball",
+        ["text"] = {
+            [1] = "{C:green}#1# in #2#{} chance for each played",
+            [2] = "{C:attention}8{} to create a {C:tarot}Tarot{} card when",
+            [3] = "scored. failure rate decreases by",
+			[4] = "{C:green}1{} when an {C:attention}8{} is {C:attention}discarded{}, Resets",
+			[5] = "when {C:attention}Boss Blind{} is defeated",
+			[6] = "{C:inactive}(Must have room)",
+        },
+    },
+	config = {extra= 6},
+	calculate = function(self, card, context)
+		if context.discard then
+			if context.other_card:get_id() == 8 and card.ability.extra > 1 and not context.blueprint then
+				card.ability.extra = card.ability.extra - 1
+				return {
+					message = localize('k_upgrade_ex'),
+					colour = G.C.GREEN
+				}
+			end
+		return
+		elseif context.end_of_round and not (context.individual or context.repetition) then
+			if not context.blueprint and card.ability.extra < 6 and G.GAME.blind.boss then
+                card.ability.extra = 6
+                return {
+                    message = localize('k_reset'),
+                    colour = G.C.RED
+                }
+			end
+		end
+	end
 	})
 end
 ----------------------------------------------
