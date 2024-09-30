@@ -1,20 +1,20 @@
 --- STEAMODDED HEADER
 --- MOD_NAME: ReBaloed
 --- MOD_ID: ReBaloed
+--- PREFIX: RB
 --- MOD_AUTHOR: [Rose and others]
---- MOD_DESCRIPTION: This is a small rebalance mod for Balarto, its aim is to make vouchers more interesting and comically weak jokers more than usable. Big thanks to Frich for teaching me how take_ownership works, Victin and Eremel, Galdur Wizard for teaching me some basics to Balatro modding and troubleshooting. Disclaimer: this mod is work in progress, though the plans aren't big there is more to come, also by the nature of this mod it does make the game generally easier by making jokers better and more versatility from vouchers. 
-----------------------------------------------
-------------MOD CODE -------------------------
+--- MOD_DESCRIPTION: This is a small rebalance mod for Balarto, its aim is to make vouchers more interesting and comically weak jokers more than usable. Big thanks to Frich for teaching me how take_ownership works, Victin, Eremel, Galdur Wizard, GayCoonie for teaching me basics to Balatro modding and troubleshooting. Disclaimer: this mod is work in progress, though the plans aren't big there is more to come, also by the nature of this mod it does make the game generally easier by making jokers better.
 function SMODS.INIT.ReBaloed()
-local ReBaloed = SMODS.findModByID('ReBaloed')
-local card = self
+local current_mod = SMODS.findModByID('ReBaloed')
+local mod_path = SMODS.current_mod.path
+
 	SMODS.Joker:take_ownership('credit_card', {
 	loc_txt = {
         ["name"] = "Credit Card",
         ["text"] = {
             [1] = "Go up to {C:red}-$#1#{} in debt.",
-            [2] = "When {C:attention}Boss Blind{} is defeated,",
-			[3] = "remove all debt"
+            [2] = "When {C:attention}Boss Blind{} is",
+			[3] = "defeated, remove all debt"
         },
     },
 	config = {extra = 15},
@@ -33,7 +33,7 @@ local card = self
 	loc_txt = {
         ["name"] = "Loyalty Card",
         ["text"] = {
-            [1] = "Every {C:attention}4{} hands this Joker",
+            [1] = "Every {C:attention}4{} hands this",
             [2] = "gives {X:mult,C:white}X#1#{} Mult and {C:money}$3{}",
 			[3] = "{C:inactive}(#3#){}"
         },
@@ -53,7 +53,7 @@ local card = self
 	loc_txt = {
         ["name"] = "Square Joker",
         ["text"] = {
-            [1] = "This Joker gains {C:blue}+4{} chips for",
+            [1] = "This Joker gains {C:blue}+#2#{} chips for",
             [2] = "every {C:attention}played hand{} and {C:attention}discard{}",
             [3] = "that are exactly {C:attention}4{} cards",
 			[4] = "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips){}",
@@ -85,8 +85,8 @@ local card = self
         ["text"] = {
             [1] = "{C:green}#1# in #2#{} chance for each played",
             [2] = "{C:attention}8{} to create a {C:tarot}Tarot{} card when",
-            [3] = "scored. failure rate decreases by",
-			[4] = "{C:green}1{} when an {C:attention}8{} is {C:attention}discarded{}, Resets",
+            [3] = "scored. Failure rate decreases by",
+			[4] = "{C:green}1{} for each {C:attention}8{} {C:attention}discarded{}, resets",
 			[5] = "when {C:attention}Boss Blind{} is defeated",
 			[6] = "{C:inactive}(Must have room)",
         },
@@ -113,6 +113,18 @@ local card = self
 		end
 	end
 	})
+	SMODS.Joker:take_ownership('delayed_grat', {
+	loc_txt = {
+        ["name"] = "Delayed Gratification",
+        ["text"] = {
+            [1] = "At end of each round earn",
+            [2] = "{C:money}$#1#{} per remaining {C:red}Discard{}",
+        },
+    },
+	calc_dollar_bonus = function(self, card)
+        if G.GAME.current_round.discards_left > 0 then
+            return G.GAME.current_round.discards_left*card.ability.extra
+        end
+    end
+	})
 end
-----------------------------------------------
-------------MOD CODE END----------------------
