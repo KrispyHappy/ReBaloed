@@ -21,7 +21,7 @@ local vertical_tabs = {}
 		create_toggle({label = 'Supernova', ref_table = ReBaloed.config, ref_value = 're_nova', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Square Joker', ref_table = ReBaloed.config, ref_value = 're_square', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Acrobat', ref_table = ReBaloed.config, ref_value = 're_acrobat', callback = function() ReBaloed:save_config() end}),
-		create_toggle({label = 'The Idol', ref_table = ReBaloed.config, ref_value = 're_idol', callback = function() ReBaloed:save_config() end})
+		create_toggle({label = 'The Idol', info = {'Red nodes require a game restart'}, ref_table = ReBaloed.config, ref_value = 're_idol', callback = function() ReBaloed:save_config() end})
     }},
 	{n = G.UIT.C, config = { align = "cr", minw = G.ROOM.T.w*0.25, padding = 0.04 }, nodes = {
 	    create_toggle({label = 'Change Joker Rarities', active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_rare', callback = function() ReBaloed:save_config() end}),
@@ -31,7 +31,7 @@ local vertical_tabs = {}
 		create_toggle({label = 'Double Lovers', active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_d_lovers', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Buff Speed Tag', active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_speed', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Buff Ethereal Tag', ref_table = ReBaloed.config, ref_value = 're_ethereal', callback = function() ReBaloed:save_config() end}),
-		create_toggle({label = 'Change Tag Appearance', active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_a_tag', callback = function() ReBaloed:save_config() end})
+		create_toggle({label = 'Change Tag Appearance', info = {'Blue nodes are mod friendly and no restart needed'}, active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_a_tag', callback = function() ReBaloed:save_config() end})
 	}},
 	}}
 end
