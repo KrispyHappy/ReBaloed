@@ -1,4 +1,4 @@
-This is a small rebalance mod for Balarto, its aim is to make vouchers more interesting, comically weak jokers and tags more than usable. Big thanks to Frich for teaching me how take_ownership works, Victin, Eremel, Galdur Wizard, GayCoonie and a bunch of other people i don't remember to mention for teaching me basics to Balatro modding and troubleshooting.
+This is a small rebalance mod for Balarto, its aim is to make comically weak jokers and tags more than usable. Big thanks to Frich for teaching me how take_ownership works, Victin, Eremel, Galdur Wizard, GayCoonie and a bunch of other people i don't remember to mention for teaching me basics to Balatro modding and troubleshooting.
 All the code within this mod can be used, if you feel that the context my code is used in is too similar i ask that I'm created :)
 
 here's the as of now small list of changes are found here
