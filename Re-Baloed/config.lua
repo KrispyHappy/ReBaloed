@@ -10,6 +10,7 @@
 	
 	re_rare = true,
 	re_pj = true,
+	re_spc = true,
 	re_ouija = true,
 	re_hex = true,
 	re_d_lovers = true,
