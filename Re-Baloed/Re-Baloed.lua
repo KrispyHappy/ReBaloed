@@ -36,6 +36,7 @@ local vertical_tabs = {}
 	{n = G.UIT.C, config = { align = "cr", minw = G.ROOM.T.w*0.25, padding = 0.04 }, nodes = {
 	    create_toggle({label = 'Change Joker Rarities', active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_rare', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Change Prices', active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_pj', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'Spectral Pack Cost', active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_spc', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Ouija Rework', ref_table = ReBaloed.config, ref_value = 're_ouija', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Hex Rework', ref_table = ReBaloed.config, ref_value = 're_hex', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Double Lovers', active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_d_lovers', callback = function() ReBaloed:save_config() end}),
@@ -81,13 +82,14 @@ end
 	
 	G.P_CENTERS.v_blank.cost = 5
 	G.P_CENTERS.v_antimatter.cost = 15
+	end
 	
+	if config.re_spc == true then
 	G.P_CENTERS.p_spectral_normal_1.cost = 6
 	G.P_CENTERS.p_spectral_normal_2.cost = 6
 	G.P_CENTERS.p_spectral_jumbo_1.cost = 8
 	G.P_CENTERS.p_spectral_mega_1.cost = 10
 	end
-	
 	
 	if config.re_d_lovers == true then
 	G.P_CENTERS.c_lovers.config.max_highlighted = 2
