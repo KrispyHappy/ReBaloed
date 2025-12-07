@@ -31,17 +31,19 @@ local vertical_tabs = {}
 		create_toggle({label = 'Supernova', ref_table = ReBaloed.config, ref_value = 're_nova', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Square Joker', ref_table = ReBaloed.config, ref_value = 're_square', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Acrobat', ref_table = ReBaloed.config, ref_value = 're_acrobat', callback = function() ReBaloed:save_config() end}),
-		create_toggle({label = 'The Idol', info = {'Red nodes require a game restart'}, ref_table = ReBaloed.config, ref_value = 're_idol', callback = function() ReBaloed:save_config() end})
+		create_toggle({label = 'The Idol', ref_table = ReBaloed.config, ref_value = 're_idol', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'Ouija Rework', ref_table = ReBaloed.config, ref_value = 're_ouija', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'Hex Rework', info = {'Red nodes require a game restart'}, ref_table = ReBaloed.config, ref_value = 're_hex', callback = function() ReBaloed:save_config() end})
     }},
 	{n = G.UIT.C, config = { align = "cr", minw = G.ROOM.T.w*0.25, padding = 0.04 }, nodes = {
 	    create_toggle({label = 'Change Joker Rarities', active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_rare', callback = function() ReBaloed:save_config() end}),
-		create_toggle({label = 'Change Prices', active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_pj', callback = function() ReBaloed:save_config() end}),
-		create_toggle({label = 'Spectral Pack Cost', active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_spc', callback = function() ReBaloed:save_config() end}),
-		create_toggle({label = 'Ouija Rework', ref_table = ReBaloed.config, ref_value = 're_ouija', callback = function() ReBaloed:save_config() end}),
-		create_toggle({label = 'Hex Rework', ref_table = ReBaloed.config, ref_value = 're_hex', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'Joker Costs', active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_pj', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'Spectral Pack Costs', active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_spc', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'Voucher Costs', active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_voc', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Double Lovers', active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_d_lovers', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Buff Speed Tag', active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_speed', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Buff Ethereal Tag', ref_table = ReBaloed.config, ref_value = 're_ethereal', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'Buff Top-up Tag', ref_table = ReBaloed.config, ref_value = 're_top', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Change Tag Appearance', info = {'Blue nodes are mod friendly and no restart needed'}, active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_a_tag', callback = function() ReBaloed:save_config() end})
 	}},
 	}}
@@ -71,6 +73,15 @@ end
 	end
 	
 	if config.re_pj == true then
+	G.P_CENTERS.j_zany.cost = 3
+	G.P_CENTERS.j_mad.cost = 3
+	G.P_CENTERS.j_crazy.cost = 3
+	G.P_CENTERS.j_droll.cost = 3
+	G.P_CENTERS.j_wily.cost = 3
+	G.P_CENTERS.j_clever.cost = 3
+	G.P_CENTERS.j_devious.cost = 3
+	G.P_CENTERS.j_crafty.cost = 3
+	G.P_CENTERS.j_raised_fist.cost = 4
 	G.P_CENTERS.j_splash.cost = 1
 	G.P_CENTERS.j_red_card.cost = 2
 	G.P_CENTERS.j_mail.cost = 6
@@ -79,9 +90,6 @@ end
 	G.P_CENTERS.j_smeared.cost = 4
 	G.P_CENTERS.j_constellation.cost = 8
 	G.P_CENTERS.j_ring_master.cost = 2
-	
-	G.P_CENTERS.v_blank.cost = 5
-	G.P_CENTERS.v_antimatter.cost = 15
 	end
 	
 	if config.re_spc == true then
@@ -90,7 +98,15 @@ end
 	G.P_CENTERS.p_spectral_jumbo_1.cost = 8
 	G.P_CENTERS.p_spectral_mega_1.cost = 10
 	end
-	
+
+	if config.re_voc == true then
+	G.P_CENTERS.v_directors_cut.cost = 5
+	G.P_CENTERS.v_magic_trick.cost = 5
+	G.P_CENTERS.v_blank.cost = 5
+	G.P_CENTERS.v_antimatter.cost = 15
+	G.P_CENTERS.v_petroglyph.cost = 15
+	end
+
 	if config.re_d_lovers == true then
 	G.P_CENTERS.c_lovers.config.max_highlighted = 2
 	end
@@ -111,21 +127,46 @@ end
 			[2] = "{C:spectral}Mega Spectral Pack"
 		},
 	},
-	apply = function(tag, context)
+	apply = function(self, tag, context)
         tag:yep('+', G.C.SECONDARY_SET.Spectral, function()
-            local key = 'p_spectral_mega_1'
-            local card = Card(G.play.T.x + G.play.T.w/2 - G.CARD_W*1.27/2,
-            G.play.T.y + G.play.T.h/2-G.CARD_H*1.27/2, G.CARD_W*1.27, G.CARD_H*1.27, G.P_CARDS.empty, G.P_CENTERS[key], {bypass_discovery_center = true, bypass_discovery_ui = true})
-            card.cost = 0
-            card.from_tag = true
-            G.FUNCS.use_card({config = {ref_table = card}})
-            card:start_materialize()
-            G.CONTROLLER.locks[tag.ID] = nil
-            return true
-            end)
-            tag.triggered = true
-            return true
+			local key = 'p_spectral_mega_1'
+			local card = Card(G.play.T.x + G.play.T.w/2 - G.CARD_W*1.27/2,
+			G.play.T.y + G.play.T.h/2-G.CARD_H*1.27/2, G.CARD_W*1.27, G.CARD_H*1.27, G.P_CARDS.empty, G.P_CENTERS[key], {bypass_discovery_center = true, 	bypass_discovery_ui = true})
+			card.cost = 0
+			card.from_tag = true
+			G.FUNCS.use_card({config = {ref_table = card}})
+			card:start_materialize()
+			G.CONTROLLER.locks[tag.ID] = nil
+			return true
+		end)
+        tag.triggered = true
+        return true
         end})
+	end
+
+	if config.re_top == true then
+	SMODS.Tag:take_ownership('top_up', {
+	loc_txt = {
+		["name"] = "Top-up Tag",
+		["text"] = {
+			[1] = "Create {C:attention}#1# {C:blue}Common{}",
+			[2] = "Jokers, even if",
+			[3] = "there's no room"
+		},
+	},
+	apply = function(self, tag, context)
+		tag:yep('+', G.C.PURPLE,function()
+			for i = 1, tag.config.spawn_jokers do
+				local card = create_card('Joker', G.jokers, nil, 0, nil, nil, nil, 'top')
+				card:add_to_deck()
+				G.jokers:emplace(card)
+			end
+			G.CONTROLLER.locks[tag.ID]  = nil
+			return true
+	    end)
+	    tag.triggered = true
+	    return true
+	    end})
 	end
 	
 	if config.re_ouija == true then

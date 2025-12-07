@@ -10,11 +10,13 @@
 	
 	re_rare = true,
 	re_pj = true,
+	re_voc = true,
 	re_spc = true,
 	re_ouija = true,
 	re_hex = true,
 	re_d_lovers = true,
 	re_speed = true,
 	re_ethereal = true,
+	re_top = true,
 	re_a_tag = true,
 }
