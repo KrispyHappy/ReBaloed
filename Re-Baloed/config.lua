@@ -1,17 +1,20 @@
 {
+	re_print = true
     re_credit_card = true,
 	re_loyalty_card = true,
 	re_8_ball = true,
 	re_delayed_grat = true,
 	re_nova = true,
 	re_square = true,
+	re_seance = true,
 	re_acrobat = true,
 	re_idol = true,
+	re_weed = true.
 	
 	re_rare = true,
 	re_pj = true,
 	re_voc = true,
-	re_spc = true,
+	re_spc = false,
 	re_ouija = true,
 	re_hex = true,
 	re_d_lovers = true,
