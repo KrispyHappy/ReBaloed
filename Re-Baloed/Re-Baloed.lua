@@ -2,8 +2,8 @@
 --- MOD_NAME: ReBaloed
 --- MOD_ID: ReBaloed
 --- PREFIX: RB
---- MOD_AUTHOR: [Rose and others]
---- MOD_DESCRIPTION: This is a small rebalance mod for Balarto, its aim is to make vouchers more interesting, comically weak jokers and tags more than usable. Big thanks to Frich for teaching me how take_ownership works, Victin, Eremel, Galdur Wizard, GayCoonie and a bunch of other people i don't remember to mention for teaching me basics to Balatro modding and troubleshooting. All the code within this mod can be used, if you feel that the context my code is used in is too similar i ask that I'm created :)
+--- MOD_AUTHOR: [Rose]
+--- MOD_DESCRIPTION: This is a rebalance mod for Balatro, its aim is to make comically weak jokers and tags more than usable by changing their abilities, along with preserving the vanilla game design. Big thanks to Frich for teaching me how take_ownership works, and the Balatro modding community for teaching me basics of modding and troubleshooting.				 All the code within this mod can be used, if you feel that the context my code is used in is too similar i ask that I'm credited :)				This mod has custom challenges to show off the joker changes! Install the challenger deep mod to play them.
 local ReBaloed  = SMODS.current_mod
 local config = ReBaloed.config
 
@@ -24,10 +24,10 @@ function ReBaloed.config_tab()
 local vertical_tabs = {}	
     return {n=G.UIT.ROOT, config = {padding = 0.0, colour = G.C.BLACK}, nodes = {
 		{n = G.UIT.C, config = { align = "cl", minw = G.ROOM.T.w*0, padding = 0.04 }, nodes = {
-        create_toggle({label = 'Misprint', detailed_tooltip = {'test yay'}, ref_table = ReBaloed.config, ref_value = 're_print', callback = function() ReBaloed:save_config() end}),
         create_toggle({label = 'Credit Card', detailed_tooltip = {'test yay'}, ref_table = ReBaloed.config, ref_value = 're_credit_card', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Loyalty Card', ref_table = ReBaloed.config, ref_value = 're_loyalty_card', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = '8 Ball', ref_table = ReBaloed.config, ref_value = 're_8_ball', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'Misprint', detailed_tooltip = {'test yay'}, ref_table = ReBaloed.config, ref_value = 're_print', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Delayed Grat', ref_table = ReBaloed.config, ref_value = 're_delayed_grat', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Supernova', ref_table = ReBaloed.config, ref_value = 're_nova', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Square Joker', ref_table = ReBaloed.config, ref_value = 're_square', callback = function() ReBaloed:save_config() end}),
@@ -155,6 +155,8 @@ end
 		},
 	},
 	apply = function(self, tag, context)
+	if context.type == 'new_blind_choice' then
+        G.CONTROLLER.locks[tag.ID] = true
         tag:yep('+', G.C.SECONDARY_SET.Spectral, function()
 			local key = 'p_spectral_mega_1'
 			local card = Card(G.play.T.x + G.play.T.w/2 - G.CARD_W*1.27/2,
@@ -168,6 +170,7 @@ end
 		end)
         tag.triggered = true
         return true
+        end
         end})
 	end
 
@@ -284,12 +287,10 @@ end
     },
 	config = {extra = 15},
 	calculate = function(self, card, context)
-		if context.end_of_round and G.GAME.blind.boss and G.GAME.dollars < 0 then
+		if context.end_of_round and context.game_over == false and context.main_eval and context.beat_boss and G.GAME.dollars < 0 then
 			G.E_MANAGER:add_event(Event({trigger = 'after', func = function()
-				if G.GAME.dollars ~= 0 then
 					card:juice_up()
 					ease_dollars(-G.GAME.dollars, true)
-				end
 			return true end }))
 		end
 	end})
@@ -375,36 +376,29 @@ end
     rarity = 3,
 	config = {extra = {hand_tracker = 0}},
 	calculate = function(self, card, context)
-		if context.before then
-			if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
-				if context.poker_hands then
-					if (next(context.poker_hands['Flush']) and card.ability.extra.hand_tracker == 1) or next(context.poker_hands['Straight Flush']) then
-						card.ability.extra.hand_tracker = 0
-						G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
-						G.E_MANAGER:add_event(Event({
-							trigger = 'before',
-							delay = 0.0,
-							func = (function()
-								local card = create_card('Spectral',G.consumeables, nil, nil, nil, nil, nil, 'sea')
-								card:add_to_deck()
-								G.consumeables:emplace(card)
-								G.GAME.consumeable_buffer = 0
-							return true
-							end)}))
-						return {
-							message = localize('k_plus_spectral'),
-							colour = G.C.SECONDARY_SET.Spectral
-						}
-					elseif next(context.poker_hands['Straight']) and card.ability.extra.hand_tracker == 0 and not context.blueprint then
-						card.ability.extra.hand_tracker = 1
-						local eval = function() return (card.ability.extra.hand_tracker == 1) end
-						juice_card_until(card, eval, false)
-						return {
-							message = 'Straight',
-							colour = nil
-						}
-					end
+		if context.before and context.poker_hands then
+			if (next(context.poker_hands['Flush']) and card.ability.extra.hand_tracker == 1) or next(context.poker_hands['Straight Flush']) then
+				if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+					G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+					G.E_MANAGER:add_event(Event({
+					func = (function()
+					SMODS.add_card {set = 'Spectral'}
+					G.GAME.consumeable_buffer = 0
+					return true
+					end)
+					}))
+					return {
+						message = localize('k_plus_spectral'),
+						colour = G.C.SECONDARY_SET.Spectral
+					}
 				end
+			elseif next(context.poker_hands['Straight']) and card.ability.extra.hand_tracker == 0 and not context.blueprint then
+				card.ability.extra.hand_tracker = 1
+				local eval = function() return (card.ability.extra.hand_tracker == 1) end
+				juice_card_until(card, eval, false)
+				return {
+					message = 'Straight'
+				}
 			end
 		end
 	end})
@@ -412,6 +406,7 @@ end
 	
 	if config.re_8_ball == true then
 	SMODS.Joker:take_ownership('8_ball', {
+	name = "8_ball (ReBaloed)",
 	loc_txt = {
         ["name"] = "8 Ball",
         ["text"] = {
@@ -421,19 +416,19 @@ end
 			[4] = "{C:inactive}(Must have room)",
         },
     },
-	config = {extra = 99999},
+	config = {ball_ready = 0},
 	calculate = function(self, card, context)
 		if context.discard then
 			if context.other_card:get_id() == 8 then
-				ball_ready = 1
-				local eval = function() return ball_ready == 1 end
+				card.ability.ball_ready = 1
+				local eval = function() return card.ability.ball_ready == 1 end
 				juice_card_until(card, eval, true)
 			end
 		end
 		if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
 		  if context.individual and context.cardarea == G.play then
-			if (context.other_card:get_id() == 8) and ball_ready == 1 then
-				ball_ready = 0
+			if (context.other_card:get_id() == 8) and card.ability.ball_ready == 1 then
+				card.ability.ball_ready = 0
 		        G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
                 return {
                     extra = {focus = card, message = localize('k_plus_tarot'), func = function()
@@ -475,6 +470,7 @@ end
 	
 	if config.re_nova == true then
 	SMODS.Joker:take_ownership('supernova', {
+	name = "supernova (ReBaloed)",
 	loc_txt = {
         ["name"] = "Supernova",
         ["text"] = {
@@ -494,12 +490,6 @@ end
 			colour = G.C.MULT
 			}
 		end
-		if context.joker_main then
-			return {
-			message = 'Hand Played',
-			colour = nil
-			}
-		end
 		if context.after then
 			G.GAME.hands[context.scoring_name].mult = G.GAME.hands[context.scoring_name].mult - G.GAME.hands[context.scoring_name].played
 		end
@@ -508,33 +498,31 @@ end
 	
 	if config.re_acrobat == true then
 	SMODS.Joker:take_ownership('acrobat', {
+	name = "Acrobat (ReBaloed)",
 	loc_txt = {
         ["name"] = "Acrobat",
         ["text"] = {
             [1] = "{X:red,C:white} X#1# {} Mult on {C:attention}final",
             [2] = "{C:attention}hand{} of round or next",
 			[3] = "{C:attention}played hand{} after",
-			[4] = "{C:attention}final discard{} of round",
+			[4] = "{C:attention}final discard{} of round"
         },
     },
+	loc_vars = function(self, info_queue, card)
+		return {vars = {card.ability.extra.Xmult}}
+    end,
+    config = {extra = {Xmult = 3, acrobat_trigger = 0}},
 	calculate = function(self, card, context)
-	  if not context.blueprint then
-		if G.GAME.current_round.discards_left > 0 then
-			acrobat_trigger = true
-		end
-		if G.GAME.current_round.discards_left == 0 and acrobat_trigger == true then
-			acrobat_trigger = false
-			acrobat_ready = 1
-			local eval = function() return (acrobat_ready == 1) end
-            juice_card_until(card, eval, true)
+		if (context.after and G.GAME.current_round.hands_left == 1) or (G.GAME.current_round.discards_left == 1 and context.pre_discard) or (G.GAME.current_round.discards_used == 0 and G.GAME.current_round.discards_left == 0) and not context.blueprint and card.ability.extra.acrobat_trigger == 0 then
+			card.ability.extra.acrobat_trigger = 1
+			local eval = function() return (card.ability.extra.acrobat_trigger == 1) end
+            juice_card_until(card, eval, false)
 			return
 		end
-	  end
-		if context.joker_main and acrobat_ready == 1 then
-			acrobat_ready = 0
+		if context.joker_main and card.ability.extra.acrobat_trigger == 1 then
+			card.ability.extra.acrobat_trigger = 0
 		    return {
-                message = localize{type='variable',key='a_xmult',vars={card.ability.extra}},
-                Xmult_mod = card.ability.extra
+                Xmult = card.ability.extra.Xmult
             }
 		end
 	end})
@@ -542,7 +530,6 @@ end
 	
 	if config.re_idol == true then
 	SMODS.Joker:take_ownership('idol', {
-	--loc_vars = function(self) return {vars = {self.ability.extra, localize(G.GAME.current_round.idol_card.rank, 'ranks')}} end,
 	loc_txt = {
         ["name"] = "The Idol",
         ["text"] = {
@@ -590,3 +577,5 @@ end
 	end
     end})
     end
+
+

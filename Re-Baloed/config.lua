@@ -1,5 +1,5 @@
 {
-	re_print = true
+	re_print = true,
     re_credit_card = true,
 	re_loyalty_card = true,
 	re_8_ball = true,
@@ -9,7 +9,7 @@
 	re_seance = true,
 	re_acrobat = true,
 	re_idol = true,
-	re_weed = true.
+	re_weed = true,
 	
 	re_rare = true,
 	re_pj = true,
