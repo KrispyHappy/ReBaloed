@@ -18,6 +18,7 @@
 	re_ouija = true,
 	re_hex = true,
 	re_d_lovers = true,
+	re_collect = true,
 	re_speed = true,
 	re_ethereal = true,
 	re_top = true,
