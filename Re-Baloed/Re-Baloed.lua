@@ -27,21 +27,7 @@ end
 function ReBaloed.config_tab()
 local vertical_tabs = {}	
     return {n=G.UIT.ROOT, config = {padding = 0.0, colour = G.C.BLACK}, nodes = {
-		{n = G.UIT.C, config = { align = "cl", minw = G.ROOM.T.w*0, padding = 0.04 }, nodes = {
-        create_toggle({label = 'Credit Card', detailed_tooltip = {title = "pussy", text = {"Line1", "Line2"}}, ref_table = ReBaloed.config, ref_value = 're_credit_card', callback = function() ReBaloed:save_config() end}),
-		create_toggle({label = 'Loyalty Card', ref_table = ReBaloed.config, ref_value = 're_loyalty_card', callback = function() ReBaloed:save_config() end}),
-		create_toggle({label = '8 Ball', ref_table = ReBaloed.config, ref_value = 're_8_ball', callback = function() ReBaloed:save_config() end}),
-		create_toggle({label = 'Misprint', detailed_tooltip = {'test yay'}, ref_table = ReBaloed.config, ref_value = 're_print', callback = function() ReBaloed:save_config() end}),
-		create_toggle({label = 'Delayed Grat', ref_table = ReBaloed.config, ref_value = 're_delayed_grat', callback = function() ReBaloed:save_config() end}),
-		create_toggle({label = 'Supernova', ref_table = ReBaloed.config, ref_value = 're_nova', callback = function() ReBaloed:save_config() end}),
-		create_toggle({label = 'Square Joker', ref_table = ReBaloed.config, ref_value = 're_square', callback = function() ReBaloed:save_config() end}),
-		create_toggle({label = 'Séance', ref_table = ReBaloed.config, ref_value = 're_seance', callback = function() ReBaloed:save_config() end}),
-		create_toggle({label = 'Acrobat', ref_table = ReBaloed.config, ref_value = 're_acrobat', callback = function() ReBaloed:save_config() end}),
-		create_toggle({label = 'The Idol', ref_table = ReBaloed.config, ref_value = 're_idol', callback = function() ReBaloed:save_config() end}),
-		create_toggle({label = 'Golden Joker', ref_table = ReBaloed.config, ref_value = 're_golden', callback = function() ReBaloed:save_config() end}),
-		create_toggle({label = 'Flower Pot', active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_weed', callback = function() ReBaloed:save_config() end})
-    }},
-    {n = G.UIT.C, config = { align = "cm", minw = G.ROOM.T.w*0, padding = 0.04 }, nodes = {
+    {n = G.UIT.C, config = { align = "cl", minw = G.ROOM.T.w*0, padding = 0.04 }, nodes = {
 		create_toggle({label = 'Standard Tag', ref_table = ReBaloed.config, ref_value = 're_stand', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Charm Tag', ref_table = ReBaloed.config, ref_value = 're_charm', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Meteor Tag', ref_table = ReBaloed.config, ref_value = 're_meteor', callback = function() ReBaloed:save_config() end}),
@@ -62,6 +48,31 @@ local vertical_tabs = {}
 	}},
 	}}
 end
+
+SMODS.current_mod.extra_tabs = function()
+--local vertical_tabs = {}
+	return {{label = "Jokers", tab_definition_function = function()
+    return {n=G.UIT.ROOT, config = {padding = 0.0, colour = G.C.BLACK}, nodes = {
+	{n = G.UIT.C, config = { align = "cl", minw = G.ROOM.T.w*0, padding = 0.04 }, nodes = {
+        create_toggle({label = 'Credit Card', ref_table = ReBaloed.config, ref_value = 're_credit_card', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'Loyalty Card', ref_table = ReBaloed.config, ref_value = 're_loyalty_card', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = '8 Ball', ref_table = ReBaloed.config, ref_value = 're_8_ball', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'Misprint', ref_table = ReBaloed.config, ref_value = 're_print', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'Delayed Grat', ref_table = ReBaloed.config, ref_value = 're_delayed_grat', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'Supernova', info = {'Red nodes may conflict, restart needed'}, ref_table = ReBaloed.config, ref_value = 're_nova', callback = function() ReBaloed:save_config() end})
+	}},
+	{n = G.UIT.C, config = { align = "cr", minw = G.ROOM.T.w*0, padding = 0.04 }, nodes = {
+		create_toggle({label = 'Square Joker', ref_table = ReBaloed.config, ref_value = 're_square', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'Séance', ref_table = ReBaloed.config, ref_value = 're_seance', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'Acrobat', ref_table = ReBaloed.config, ref_value = 're_acrobat', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'The Idol', ref_table = ReBaloed.config, ref_value = 're_idol', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'Golden Joker', ref_table = ReBaloed.config, ref_value = 're_golden', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'Flower Pot', info = {'Blue nodes are mod friendly, restart needed'}, active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_weed', callback = function() ReBaloed:save_config() end})
+    }},
+    }}
+end},}
+end
+
 if config.re_stand == true or config.re_charm == true or config.re_meteor == true then
 SMODS.Atlas {
 	key = "ReBaloed_Boosters",
