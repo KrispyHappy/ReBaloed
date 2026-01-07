@@ -14,7 +14,7 @@
     end,
     config = {extra = {Xmult = 3, acrobat_trigger = 0}},
 	calculate = function(self, card, context)
-		if (context.after and G.GAME.current_round.hands_left == 1) or (G.GAME.current_round.discards_left == 1 and context.pre_discard) or (G.GAME.current_round.discards_used == 0 and G.GAME.current_round.discards_left == 0) and not context.blueprint and card.ability.extra.acrobat_trigger == 0 then
+		if (context.after and G.GAME.current_round.hands_left == 1) or (G.GAME.current_round.discards_left == 1 and context.pre_discard) or (G.GAME.current_round.discards_used == 0 and G.GAME.current_round.discards_left == 0 and G.GAME.current_round.hands_played == 0) and not context.blueprint and card.ability.extra.acrobat_trigger == 0 then
 			card.ability.extra.acrobat_trigger = 1
 			local eval = function() return (card.ability.extra.acrobat_trigger == 1) end
             juice_card_until(card, eval, false)
