@@ -79,3 +79,68 @@
             }
         }
     }
+
+	SMODS.Challenge{
+        loc_txt = "Needle Threading",
+        key = 'needle_threading',
+        rules = {
+            custom = {
+            },
+            modifiers = {
+            }
+        },
+        jokers = {
+            {id = 'j_idol', eternal = true},
+            {id = 'j_ancient', eternal = true},
+        },
+        consumeables = {
+        },
+        vouchers = {
+            {id = 'v_overstock_norm'},
+			{id = 'v_crystal_ball'},
+			{id = 'v_tarot_merchant'},
+        },
+        deck = {
+			type = 'Challenge Deck'
+        },
+        restrictions = {
+        banned_cards = {
+            { id = 'j_marble' },
+            { id = 'j_midas_mask' },
+            { id = 'j_certificate' },
+            { id = 'c_magician' },
+            { id = 'c_high_priestess' },
+            { id = 'c_empress' },
+            { id = 'c_heirophant' },
+            { id = 'c_lovers' },
+            { id = 'c_chariot' },
+            { id = 'c_justice' },
+            { id = 'c_hermit' },
+            { id = 'c_wheel_of_fortune' },
+            { id = 'c_temperance' },
+            { id = 'c_devil' },
+            { id = 'c_tower' },
+            { id = 'c_judgement' },
+            { id = 'c_familiar' },
+            { id = 'c_grim' },
+            { id = 'c_incantation' },
+            { id = 'c_talisman' },
+            { id = 'c_aura' },
+            { id = 'c_deja_vu' },
+            { id = 'c_trance' },
+            { id = 'c_medium' },
+            { id = 'v_illusion' },
+            { id = 'p_standard_normal_1', ids = {
+                'p_standard_normal_1', 'p_standard_normal_2',
+                'p_standard_normal_3', 'p_standard_normal_4',
+                'p_standard_jumbo_1', 'p_standard_jumbo_2',
+                'p_standard_mega_1', 'p_standard_mega_2' }
+            },
+            },
+            banned_tags = {
+				{id = 'tag_standard'},
+            },
+            banned_other = {
+            }
+        }
+    }

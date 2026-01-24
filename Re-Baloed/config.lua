@@ -1,4 +1,4 @@
-{
+return {
 	re_stand = true,
 	re_charm = true,
 	re_meteor = true,

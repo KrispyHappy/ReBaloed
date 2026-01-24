@@ -54,6 +54,7 @@ SMODS.current_mod.extra_tabs = function()
 	return {{label = "Jokers", tab_definition_function = function()
     return {n=G.UIT.ROOT, config = {padding = 0.0, colour = G.C.BLACK}, nodes = {
 	{n = G.UIT.C, config = { align = "cl", minw = G.ROOM.T.w*0, padding = 0.04 }, nodes = {
+		create_toggle({label = 'Sinful Jokers', ref_table = ReBaloed.config, ref_value = 're_sinful', callback = function() ReBaloed:save_config() end}),
         create_toggle({label = 'Credit Card', ref_table = ReBaloed.config, ref_value = 're_credit_card', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Loyalty Card', ref_table = ReBaloed.config, ref_value = 're_loyalty_card', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = '8 Ball', ref_table = ReBaloed.config, ref_value = 're_8_ball', callback = function() ReBaloed:save_config() end}),
@@ -66,7 +67,9 @@ SMODS.current_mod.extra_tabs = function()
 		create_toggle({label = 'Séance', ref_table = ReBaloed.config, ref_value = 're_seance', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Acrobat', ref_table = ReBaloed.config, ref_value = 're_acrobat', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'The Idol', ref_table = ReBaloed.config, ref_value = 're_idol', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'Obelisk', ref_table = ReBaloed.config, ref_value = 're_obelisk', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Golden Joker', ref_table = ReBaloed.config, ref_value = 're_golden', callback = function() ReBaloed:save_config() end}),
+		create_toggle({label = 'Popcorn', ref_table = ReBaloed.config, ref_value = 're_popcorn', callback = function() ReBaloed:save_config() end}),
 		create_toggle({label = 'Flower Pot', info = {'Blue nodes are mod friendly, restart needed'}, active_colour = G.C.BLUE, ref_table = ReBaloed.config, ref_value = 're_weed', callback = function() ReBaloed:save_config() end})
     }},
     }}
@@ -136,6 +139,15 @@ end
 if config.re_golden == true then
 assert(SMODS.load_file('jokers/golden.lua'))()
 end
+if config.re_sinful == true then
+assert(SMODS.load_file('jokers/sinful.lua'))()
+end
+if config.re_obelisk == true then
+assert(SMODS.load_file('jokers/obelisk.lua'))()
+end
+if config.re_popcorn == true then
+assert(SMODS.load_file('jokers/popcorn.lua'))()
+end
 
 if config.re_weed == true then
 	G.P_CENTERS.j_flower_pot.config.extra = 4
@@ -145,10 +157,7 @@ if config.re_rare == true then
 	G.P_CENTERS.j_runner.rarity = 2
 	G.P_CENTERS.j_pareidolia.rarity = 1
 	G.P_CENTERS.j_smeared.rarity = 1
-	G.P_CENTERS.j_obelisk.rarity = 2
 	G.P_CENTERS.j_dusk.rarity = 1
-	SMODS.remove_pool(G.P_JOKER_RARITY_POOLS[3], 'j_obelisk')
-	SMODS.insert_pool(G.P_JOKER_RARITY_POOLS[2], G.P_CENTERS['j_obelisk'])
 	SMODS.remove_pool(G.P_JOKER_RARITY_POOLS[2], 'j_pareidolia')
 	SMODS.insert_pool(G.P_JOKER_RARITY_POOLS[1], G.P_CENTERS['j_pareidolia'])
 	SMODS.remove_pool(G.P_JOKER_RARITY_POOLS[2], 'j_smeared')
@@ -157,6 +166,11 @@ if config.re_rare == true then
 	SMODS.insert_pool(G.P_JOKER_RARITY_POOLS[2], G.P_CENTERS['j_runner'])
 	SMODS.remove_pool(G.P_JOKER_RARITY_POOLS[2], 'j_dusk')
 	SMODS.insert_pool(G.P_JOKER_RARITY_POOLS[1], G.P_CENTERS['j_dusk'])
+	if not config.re_obel then
+		--G.P_CENTERS.j_obelisk.rarity = 2
+		--SMODS.remove_pool(G.P_JOKER_RARITY_POOLS[3], 'j_obelisk')
+		--SMODS.insert_pool(G.P_JOKER_RARITY_POOLS[2], G.P_CENTERS['j_obelisk'])
+	end
 end
 	
 if config.re_a_tag == true then
